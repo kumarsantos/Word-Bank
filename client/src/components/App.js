@@ -24,7 +24,7 @@ class App extends Component {
         User: {
           UserName: "Praveen",
           FullName: "Praveen Kumar Purushothaman",
-        },
+        }
       },
       () => {
         // Check if local storage is supported.
