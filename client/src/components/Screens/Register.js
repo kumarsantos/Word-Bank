@@ -2,7 +2,8 @@ import React from "react";
 import Card from "../Bootstrap/Card";
 import FormGroup from "../Bootstrap/Forms/FormGroup";
 
-const Register = ({ onChange, onSubmit }) => {
+const Register = ({ onChange, onSubmit, Values }) => {
+  const onInputChange = () => {};
   return (
     <Card
       Header="Register"
@@ -10,13 +11,25 @@ const Register = ({ onChange, onSubmit }) => {
       Text="Please register to access Word Bank and add new words to the system."
     >
       <form onChange={onChange} onSubmit={onSubmit}>
+        {Values.Error && Values.Error.length > 0 && (
+          <div className="alert alert-danger">
+            <p>There are some errors preventing your sign up:</p>
+            <ul>
+              {Values.Error.map((err, key) => (
+                <li key={key}>{err}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         {[
           {
             ID: "fullname",
             Label: "Your Name",
             Placeholder: "Please enter your full name.",
             Type: "text",
-            Desc: "Please enter your full name so that we can call you by that."
+            Desc:
+              "Please enter your full name so that we can call you by that.",
+            DontShow: true
           },
           {
             ID: "username",
@@ -47,11 +60,19 @@ const Register = ({ onChange, onSubmit }) => {
             Label: "Email Address",
             Placeholder: "Please enter your email address.",
             Type: "email",
-            Desc: "Please enter your email address so we can send you spam."
+            Desc: "Please enter your email address so we can send you spam.",
+            DontShow: true
           }
-        ].map((fg, key) => (
-          <FormGroup key={key} {...fg} />
-        ))}
+        ]
+          .filter(fg => !fg.DontShow)
+          .map((fg, key) => (
+            <FormGroup
+              key={key}
+              {...fg}
+              onChange={onInputChange}
+              Value={Values[fg.ID]}
+            />
+          ))}
         <button type="submit" className="btn btn-primary">
           Register
         </button>
