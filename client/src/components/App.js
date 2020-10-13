@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import Header from "./Header/Header";
 import ContainerRow from "./Bootstrap/ContainerRow";
 import Logo from "../assets/logo/logo-light.png";
-import Console from "../helpers/Console";
 import Login from "./Screens/Login";
 import Register from "./Screens/Register";
 import Welcome from "./Screens/Welcome";
+import { Link } from "react-router-dom";
 
 const InitialForm = {
   Login: {
@@ -170,8 +170,10 @@ class App extends Component {
     return (
       <div className="App">
         <Header className="Header fixed-top" dark={true}>
-          <img src={Logo} alt="Word Bank Logo" />
-          Word Bank
+          <Link to="/">
+            <img src={Logo} alt="Word Bank Logo" />
+            Word Bank
+          </Link>
         </Header>
         <ContainerRow fluid={true} className="my-3">
           {User ? (
@@ -186,7 +188,6 @@ class App extends Component {
                   onChange={(e) => this.handleChange("Login", e)}
                   Values={this.state.Form.Login}
                 />
-                <Console className="mt-3" data={this.state} />
               </div>
               <div className="col-12 col-md-6">
                 <Register
