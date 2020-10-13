@@ -11,7 +11,7 @@ const InitialForm = {
   Login: {
     loginusername: "",
     loginpassword: "",
-    Error: null
+    Error: null,
   },
   Register: {
     fullname: "",
@@ -19,8 +19,8 @@ const InitialForm = {
     password: "",
     confpass: "",
     email: "",
-    Error: null
-  }
+    Error: null,
+  },
 };
 
 // Hardcode Username and Passwords.
@@ -31,19 +31,17 @@ const Users = {
   Ruchita: "Carol@123",
   Princy: "passw",
   Nagaraj: "nagsvk123",
-  angle: "hello@12"
+  angle: "hello@12",
 };
 
 class App extends Component {
   state = {
     User: null,
-<<<<<<< HEAD
-=======
-    Form: InitialForm
+    Form: InitialForm,
   };
   resetForm = () => {
     this.setState({
-      Form: InitialForm
+      Form: InitialForm,
     });
   };
   saveState = () => {
@@ -57,40 +55,19 @@ class App extends Component {
     const { name, value } = e.target;
     Form[form][name] = value;
     this.setState({ Form });
->>>>>>> b68848a4c07b40cbbb6bc5a2935202d390be7371
   };
   handleLogin = (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-    this.setState({
-      User: {
-        UserName: "Praveen",
-        FullName: "Praveen Kumar Purushothaman",
-      },
-    });
-    this.setState(
-      {
-        User: {
-          UserName: "Praveen",
-          FullName: "Praveen Kumar Purushothaman",
-        }
-      },
-      () => {
-        // Check if local storage is supported.
-        if (typeof Storage !== "undefined") {
-          window.localStorage.setItem("state", JSON.stringify(this.state));
-        }
-=======
     const {
       loginusername: UserName,
-      loginpassword: password
+      loginpassword: password,
     } = this.state.Form.Login;
     if (UserName.trim().length > 3 && password.trim().length > 3) {
       const Form = { ...this.state.Form };
       Form.Login.Error = null;
       this.setState(
         {
-          Form
+          Form,
         },
         this.saveState
       );
@@ -98,7 +75,7 @@ class App extends Component {
         this.setState(
           {
             User: { UserName, FullName: UserName },
-            Form: InitialForm
+            Form: InitialForm,
           },
           this.saveState
         );
@@ -107,7 +84,7 @@ class App extends Component {
         Form.Login.Error = "User not found.";
         this.setState(
           {
-            Form
+            Form,
           },
           this.saveState
         );
@@ -116,11 +93,10 @@ class App extends Component {
         Form.Login.Error = "Invalid username and password combination.";
         this.setState(
           {
-            Form
+            Form,
           },
           this.saveState
         );
->>>>>>> b68848a4c07b40cbbb6bc5a2935202d390be7371
       }
     } else {
       const Form = { ...this.state.Form };
@@ -128,13 +104,13 @@ class App extends Component {
         "Please enter both username and password with each being more than 3 characters.";
       this.setState(
         {
-          Form
+          Form,
         },
         this.saveState
       );
     }
   };
-  handleRegister = e => {
+  handleRegister = (e) => {
     e.preventDefault();
     const Errors = [];
     const { username: UserName, password, confpass } = this.state.Form.Register;
@@ -147,7 +123,7 @@ class App extends Component {
       Users[UserName] = password;
       this.setState({
         User: { UserName, FullName: UserName },
-        Form: InitialForm
+        Form: InitialForm,
       });
     } else {
       if (!(UserName.trim().length > 3 && password.trim().length > 3)) {
@@ -166,7 +142,7 @@ class App extends Component {
         Form.Register.Error = Errors;
         this.setState(
           {
-            Form
+            Form,
           },
           this.saveState
         );
@@ -178,10 +154,7 @@ class App extends Component {
     this.setState(
       {
         User: null,
-<<<<<<< HEAD
-=======
-        Form: InitialForm
->>>>>>> b68848a4c07b40cbbb6bc5a2935202d390be7371
+        Form: InitialForm,
       },
       this.saveState
     );
@@ -210,7 +183,7 @@ class App extends Component {
               <div className="col-12 mb-3 mb-md-0 col-md-6">
                 <Login
                   onSubmit={this.handleLogin}
-                  onChange={e => this.handleChange("Login", e)}
+                  onChange={(e) => this.handleChange("Login", e)}
                   Values={this.state.Form.Login}
                 />
                 <Console className="mt-3" data={this.state} />
@@ -218,7 +191,7 @@ class App extends Component {
               <div className="col-12 col-md-6">
                 <Register
                   onSubmit={this.handleRegister}
-                  onChange={e => this.handleChange("Register", e)}
+                  onChange={(e) => this.handleChange("Register", e)}
                   Values={this.state.Form.Register}
                 />
               </div>
