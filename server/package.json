@@ -15,7 +15,9 @@
   "author": "Me",
   "license": "Whatever",
   "dependencies": {
-    "express": "^4.17.1",
-    "nodemon": "^2.0.4"
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.5"
   }
 }

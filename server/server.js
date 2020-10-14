@@ -10,6 +10,7 @@ app.use("/", express.static("static"));
 app.get("/", (req, res) => {
   res.json("Here's WordBank API!");
 });
+
 app.get("/api/words", (req, res) => {
   res.json({
     hello: {
@@ -26,6 +27,7 @@ app.get("/api/words", (req, res) => {
     }
   });
 });
+
 // Listen the application to the port.
 app.listen(port, () => {
   console.log(`Server started in Port ${port}!`);
