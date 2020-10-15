@@ -18,6 +18,9 @@ const Words = {
   }
 };
 
+// Read the body for post.
+words.use(express.json());
+
 // Adding Routes.
 words.get("/", (req, res) => {
   res.json(Words);
@@ -37,6 +40,26 @@ words.get("/:wordId", (req, res) => {
       Error: true,
       ErrorMessage: "Word Not Found!"
     });
+  }
+});
+words.post("/", (req, res) => {
+  const { slug, Word, Meaning, Sentence } = req.body;
+  if (slug && Word && Meaning && Sentence) {
+    if (!Words[slug]) {
+      Words[slug] = {
+        Word,
+        Meaning,
+        Sentence,
+        User: ""
+      };
+      res.status(201).json("Created new word " + slug + ".");
+    } else {
+      res.status(409).json("Word already exists.");
+    }
+  } else {
+    res
+      .status(400)
+      .json("You should give all the values of slug, Word, Meaning, Sentence!");
   }
 });
 
