@@ -8,22 +8,43 @@ const Words = {
     Word: "Hello", 
     Meaning: "Used as a greeting or to begin a telephone conversation.",
     Sentence: "Hello there, LetsGrad!",
-    User: ""
+    User: "Praveen",
+    DateCreated: new Date()
   },
   world: {
     Word: "World",
     Meaning: "The earth, together with all of its countries and peoples.",
     Sentence: "He was doing his bit to save the world",
-    User: ""
+    User: "Praveen",
+    DateCreated: new Date()
   }
 };
 
-// Read the body for post.
-words.use(express.json());
-
 // Adding Routes.
 words.get("/", (req, res) => {
-  res.json(Words);
+  res.json({
+    Error: false,
+    Message: Words
+  });
+});
+words.get("/me", (req, res) => {
+  if (!req.session.User) {
+    res.status(403).json({
+      Error: true,
+      ErrorMessage: "Not authorised."
+    });
+  } else {
+    const UserWords = {};
+    Object.keys(Words).forEach(word => {
+      if (Words[word].User === req.session.User.username) {
+        UserWords[word] = Words[word];
+      }
+    });
+    res.json({
+      Error: false,
+      Message: UserWords
+    });
+  }
 });
 words.get("/:wordId", (req, res) => {
   if (Words[req.params.wordId]) {
@@ -43,23 +64,133 @@ words.get("/:wordId", (req, res) => {
   }
 });
 words.post("/", (req, res) => {
-  const { slug, Word, Meaning, Sentence } = req.body;
-  if (slug && Word && Meaning && Sentence) {
-    if (!Words[slug]) {
-      Words[slug] = {
-        Word,
-        Meaning,
-        Sentence,
-        User: ""
-      };
-      res.status(201).json("Created new word " + slug + ".");
-    } else {
-      res.status(409).json("Word already exists.");
-    }
+  if (!req.session.User) {
+    res.status(403).json({
+      Error: true,
+      ErrorMessage: "Not authorised."
+    });
   } else {
-    res
-      .status(400)
-      .json("You should give all the values of slug, Word, Meaning, Sentence!");
+    const { slug, Word, Meaning, Sentence } = req.body;
+    if (slug && Word && Meaning && Sentence) {
+      if (!Words[slug] && slug !== "me") {
+        Words[slug] = {
+          Word,
+          Meaning,
+          Sentence,
+          User: req.session.User.username,
+          DateCreated: new Date()
+        };
+        res.status(201).json({
+          Error: false,
+          Message: "Created new word " + slug + "."
+        });
+      } else {
+        res.status(409).json({
+          Error: true,
+          ErrorMessage: "Word already exists."
+        });
+      }
+    } else {
+      res.status(400).json({
+        Error: true,
+        ErrorMessage:
+          "You should give all the values of slug, Word, Meaning, Sentence!"
+      });
+    }
+  }
+});
+words.put("/:wordId", (req, res) => {
+  if (!req.session.User) {
+    res.status(403).json({
+      Error: true,
+      ErrorMessage: "Not authorised."
+    });
+  } else {
+    const { slug, Word, Meaning, Sentence } = req.body;
+    const { wordId } = req.params;
+    if (slug && Word && Meaning && Sentence && wordId) {
+      if (
+        Words[wordId] &&
+        wordId !== "me" &&
+        slug !== "me" &&
+        Words[wordId].User === req.session.User.username
+      ) {
+        Words[wordId] = {
+          Word,
+          Meaning,
+          Sentence,
+          User: req.session.User.username,
+          DateCreated: Words[wordId].DateCreated
+        };
+        if (slug !== wordId) {
+          res.status(201).json({
+            Error: false,
+            Message: "Created new word " + slug + "."
+          });
+        } else {
+          res.status(202).json({
+            Error: false,
+            Message: "Updated word " + slug + "."
+          });
+        }
+      } else if (Words[wordId].User !== req.session.User.username) {
+        res.status(403).json({
+          Error: true,
+          ErrorMessage: "Cannot edit other's word."
+        });
+      } else if (!Words[wordId]) {
+        res.status(404).json({
+          Error: true,
+          ErrorMessage: "Word not found."
+        });
+      } else {
+        res.status(403).json({
+          Error: true,
+          ErrorMessage: "Cannot edit the word."
+        });
+      }
+    } else {
+      res.status(400).json({
+        Error: true,
+        ErrorMessage:
+          "You should give all the values of slug, Word, Meaning, Sentence!"
+      });
+    }
+  }
+});
+words.delete("/:wordId", (req, res) => {
+  if (!req.session.User) {
+    res.status(403).json({
+      Error: true,
+      ErrorMessage: "Not authorised."
+    });
+  } else {
+    const { wordId } = req.params;
+    if (
+      Words[wordId] &&
+      wordId !== "me" &&
+      Words[wordId].User === req.session.User.username
+    ) {
+      const word = Words[wordId].Word;
+      delete Words[wordId];
+      res.status(202).json({
+        Error: false,
+        Message: "Word " + word + " has been deleted."
+      });
+    } else if (!Words[wordId]) {
+      res.status(404).json({
+        Error: true,
+        ErrorMessage: "Word not found."
+      });
+    } else if (
+      wordId === "me" ||
+      Words[wordId].User !== req.session.User.username
+    ) {
+      res.status(403).json({
+        Error: true,
+        ErrorMessage: "Cannot delete the words created by others."
+      });
+    }
   }
 });
 

@@ -15,9 +15,15 @@
   "author": "Me",
   "license": "Whatever",
   "dependencies": {
+<<<<<<< HEAD
     "express": "^4.17.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.5"
+=======
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "nodemon": "^2.0.4"
+>>>>>>> 66d3a4286737e6de11b449a42b66c384bd5da34a
   }
 }
